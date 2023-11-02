@@ -1,0 +1,14 @@
+blueprint:
+  author: Manuel Gorman
+  name: RODRET Dimmer
+  description: IKEA RODRET Dimmer Remote
+  domain: automation
+
+input:
+  rodret_device:
+    name: RODRET Device
+    description: Which RODRET Dimmer to use
+    device:
+      filter:
+        - manufacturer: IKEA of Sweden
+          model: RODRET Dimmer
