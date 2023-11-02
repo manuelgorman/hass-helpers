@@ -5,7 +5,7 @@ blueprint:
   domain: automation
 
 input:
-  rodret_device:
+- rodret_device:
     name: RODRET Device
     description: Which RODRET Dimmer to use
     selector:
@@ -13,3 +13,8 @@ input:
         filter:
           - manufacturer: IKEA of Sweden
             model: RODRET Dimmer
+
+- I_single_click_action:
+    name: I - Single Press Actions
+    selector:
+      action:
