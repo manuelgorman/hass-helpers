@@ -8,7 +8,8 @@ input:
   rodret_device:
     name: RODRET Device
     description: Which RODRET Dimmer to use
-    device:
-      filter:
-        - manufacturer: IKEA of Sweden
-          model: RODRET Dimmer
+    selector:
+      device:
+        filter:
+          - manufacturer: IKEA of Sweden
+            model: RODRET Dimmer
