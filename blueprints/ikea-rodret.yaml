@@ -15,6 +15,31 @@ blueprint:
               model: RODRET Dimmer
 
     I_single_click_action:
-      name: I - Single Press Actions
+      name: I - Single Press
+      selector:
+        action:
+
+    I_long_hold_action:
+      name: I - Long Press
+      selector:
+        action:
+    
+    I_long_release_action:
+      name: I - Long Release
+      selector:
+        action:
+
+    O_single_click_action:
+      name: O - Single Press
+      selector:
+        action:
+
+    O_long_hold_action:
+      name: O - Long Press
+      selector:
+        action:
+    
+    O_long_release_action:
+      name: O - Long Release
       selector:
         action:
