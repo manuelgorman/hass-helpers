@@ -85,7 +85,7 @@ action:
     - alias: "O - Single Press"
       conditions:
       - condition: template
-      value_template: "{{ trigger.event.data.event == 2002 }}"
+        value_template: "{{ trigger.event.data.event == 2002 }}"
       sequence:
       - choose: []
         default: !input O_single_click_action
