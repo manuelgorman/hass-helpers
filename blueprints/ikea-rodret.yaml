@@ -43,3 +43,8 @@ blueprint:
       name: O - Long Release
       selector:
         action:
+
+trigger:
+  - platform: event
+    event_data:
+      device_id: !input rodret_device
