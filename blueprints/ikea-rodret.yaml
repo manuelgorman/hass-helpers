@@ -62,7 +62,8 @@ action:
       conditions:
       - condition: template
         value_template: "{{ trigger.event.data.event == 1002 }}"
-      default: !input I_single_click_action
+      sequence:
+      - default: !input I_single_click_action
 
     - alias: "I - Long Press"
       conditions:
