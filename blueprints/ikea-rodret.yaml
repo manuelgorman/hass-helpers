@@ -52,6 +52,7 @@ blueprint:
 
 trigger:
   - platform: event
+    event_type: "deconz_event"
     event_data:
       device_id: !input rodret_device
 
