@@ -62,40 +62,46 @@ action:
       conditions:
       - condition: template
         value_template: "{{ trigger.event.data.event == 1002 }}"
-      choose: []
-      default: !input I_single_click_action
+      sequence:
+      - choose: []
+        default: !input I_single_click_action
 
     - alias: "I - Long Press"
       conditions:
       - condition: template
         value_template: "{{ trigger.event.data.event == 1001 }}"
-      choose: []
-      default: !input I_long_hold_action
+      sequence:
+      - choose: []
+        default: !input I_long_hold_action
 
     - alias: "I - Long Release"
       conditions:
       - condition: template
         value_template: "{{ trigger.event.data.event == 1003 }}"
-      choose: []
-      default: !input I_long_release_action
+      sequence:
+      - choose: []
+        default: !input I_long_release_action
 
     - alias: "O - Single Press"
       conditions:
       - condition: template
       value_template: "{{ trigger.event.data.event == 2002 }}"
-      choose: []
-      default: !input O_single_click_action
+      sequence:
+      - choose: []
+        default: !input O_single_click_action
 
     - alias: "O - Long Press"
       conditions:
       - condition: template
         value_template: "{{ trigger.event.data.event == 2001 }}"
-      choose: []
-      default: !input O_long_hold_action
+      sequence:
+      - choose: []
+        default: !input O_long_hold_action
 
     - alias: "O - Long Release"
       conditions:
       - condition: template
         value_template: "{{ trigger.event.data.event == 2003 }}"
-      choose: []
-      default: !input O_long_release_action
+      sequence:
+      - choose: []
+        default: !input O_long_release_action
