@@ -1,0 +1,108 @@
+blueprint:
+  author: Manuel Gorman
+  name: RODRET Dimmer
+  description: IKEA RODRET Dimmer Remote
+  domain: automation
+
+  input:
+    rodret_device:
+      name: RODRET Device
+      description: Which RODRET Dimmer to use
+      selector:
+        device:
+          filter:
+            - manufacturer: IKEA of Sweden
+              model: RODRET Dimmer
+
+    I_single_click_action:
+      name: I - Single Press
+      default: []
+      selector:
+        action:
+
+    I_long_hold_action:
+      name: I - Long Press
+      default: []
+      selector:
+        action:
+    
+    I_long_release_action:
+      name: I - Long Release
+      default: []
+      selector:
+        action:
+
+    O_single_click_action:
+      name: O - Single Press
+      default: []
+      selector:
+        action:
+
+    O_long_hold_action:
+      name: O - Long Press
+      default: []
+      selector:
+        action:
+    
+    O_long_release_action:
+      name: O - Long Release
+      default: []
+      selector:
+        action:
+
+trigger:
+  - platform: event
+    event_type: "deconz_event"
+    event_data:
+      device_id: !input rodret_device
+
+
+action:
+- choose:
+    - alias: "I - Single Press"
+      conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.event == 1002 }}"
+      sequence:
+      - choose: []
+        default: !input I_single_click_action
+
+    - alias: "I - Long Press"
+      conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.event == 1001 }}"
+      sequence:
+      - choose: []
+        default: !input I_long_hold_action
+
+    - alias: "I - Long Release"
+      conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.event == 1003 }}"
+      sequence:
+      - choose: []
+        default: !input I_long_release_action
+
+    - alias: "O - Single Press"
+      conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.event == 2002 }}"
+      sequence:
+      - choose: []
+        default: !input O_single_click_action
+
+    - alias: "O - Long Press"
+      conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.event == 2001 }}"
+      sequence:
+      - choose: []
+        default: !input O_long_hold_action
+
+    - alias: "O - Long Release"
+      conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.event == 2003 }}"
+      sequence:
+      - choose: []
+        default: !input O_long_release_action
