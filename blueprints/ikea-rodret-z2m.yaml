@@ -12,4 +12,4 @@ blueprint:
         device:
           filter:
             - manufacturer: IKEA
-            - model: RODRET wireless dimmer/power switch (E2201)
+            - model: "RODRET wireless dimmer/power switch (E2201)"
