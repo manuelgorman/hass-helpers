@@ -13,3 +13,69 @@ blueprint:
           filter:
             - manufacturer: IKEA
             - model: "RODRET wireless dimmer/power switch (E2201)"
+    
+    on_button:
+      name: On Button (single)
+      default: []
+      selector:
+        action:
+
+    off_button:
+      name: Off Button (single)
+      default: []
+      selector:
+        action:
+
+    bright_up_hold:
+      name: Brightness Up (hold)
+      default: []
+      selector:
+        action:
+
+    bright_down_hold:
+      name: Brightness Down (hold)
+      default: []
+      selector:
+        action:
+
+    bright_stop:
+      name: Brightness Release
+      default: []
+      selector:
+        action:
+
+trigger:
+- domain: device
+  device_id: !input rodret_device
+  type: action
+  subtype: "on"
+  trigger: device
+  id: on_button
+  
+- domain: device
+  device_id: !input rodret_device
+  type: action
+  subtype: "off"
+  trigger: device
+  id: off_button
+  
+- domain: device
+  device_id: !input rodret_device
+  type: action
+  subtype: "brightness_move_up"
+  trigger: device
+  id: brightness_move_up
+  
+- domain: device
+  device_id: !input rodret_device
+  type: action
+  subtype: "brightness_move_down"
+  trigger: device
+  id: brightness_move_down
+
+- domain: device
+  device_id: !input rodret_device
+  type: action
+  subtype: "brightness_stop"
+  trigger: device
+  id: brightness_stop
