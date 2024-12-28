@@ -45,35 +45,35 @@ blueprint:
         action:
 
 trigger:
-- domain: device
+- domain: mqtt
   device_id: !input rodret_device
   type: action
   subtype: "on"
   trigger: device
   id: on_button
   
-- domain: device
+- domain: mqtt
   device_id: !input rodret_device
   type: action
   subtype: "off"
   trigger: device
   id: off_button
   
-- domain: device
+- domain: mqtt
   device_id: !input rodret_device
   type: action
   subtype: "brightness_move_up"
   trigger: device
   id: brightness_move_up
   
-- domain: device
+- domain: mqtt
   device_id: !input rodret_device
   type: action
   subtype: "brightness_move_down"
   trigger: device
   id: brightness_move_down
 
-- domain: device
+- domain: mqtt
   device_id: !input rodret_device
   type: action
   subtype: "brightness_stop"
