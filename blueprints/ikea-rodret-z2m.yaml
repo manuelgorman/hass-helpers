@@ -1,0 +1,15 @@
+blueprint:
+  author: Manuel Gorman
+  name: RODRET Dimmer (Zigbee2Mqtt)
+  description: IKEA RODRET Dimmer (Zigbee2Mqtt)
+  domain: automation
+
+  input:
+    rodret_device:
+      name: RODRET Device
+      description: Which RODRET Dimmer to target
+      selector:
+        device:
+          filter:
+            - manufacturer: IKEA
+            - model: RODRET wireless dimmer/power switch (E2201)
