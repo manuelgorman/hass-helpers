@@ -79,3 +79,51 @@ trigger:
   subtype: "brightness_stop"
   trigger: device
   id: brightness_stop
+
+
+action:
+- choose:
+  - alias: "On Button (single)"
+    conditions:
+    - condition: trigger
+      id:
+      - on_button
+    sequence:
+    - choose: []
+      default: !input on_button
+
+  - alias: "Off Button (single)"
+    conditions:
+    - condition: trigger
+      id:
+      - off_button
+    sequence:
+    - choose: []
+      default: !input off_button
+
+  - alias: "Brightness Up (hold)"
+    conditions:
+    - condition: trigger
+      id:
+      - brightness_move_up
+    sequence:
+    - choose: []
+      default: !input bright_up_hold
+
+  - alias: "Brightness Down (hold)"
+    conditions:
+    - condition: trigger
+      id:
+      - brightness_move_down
+    sequence:
+    - choose: []
+      default: !input bright_down_hold
+
+  - alias: "Brightness Up (hold)"
+    conditions:
+    - condition: trigger
+      id:
+      - brightness_stop
+    sequence:
+    - choose: []
+      default: !input bright_stop
