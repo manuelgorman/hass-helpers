@@ -1,0 +1,129 @@
+blueprint:
+  author: Manuel Gorman
+  name: RODRET Dimmer (Zigbee2Mqtt)
+  description: IKEA RODRET Dimmer (Zigbee2Mqtt)
+  domain: automation
+
+  input:
+    rodret_device:
+      name: RODRET Device
+      description: Which RODRET Dimmer to target
+      selector:
+        device:
+          filter:
+            - manufacturer: IKEA
+              model: RODRET wireless dimmer/power switch (E2201)
+    
+    on_button:
+      name: On Button (single)
+      default: []
+      selector:
+        action:
+
+    off_button:
+      name: Off Button (single)
+      default: []
+      selector:
+        action:
+
+    bright_up_hold:
+      name: Brightness Up (hold)
+      default: []
+      selector:
+        action:
+
+    bright_down_hold:
+      name: Brightness Down (hold)
+      default: []
+      selector:
+        action:
+
+    bright_stop:
+      name: Brightness Release
+      default: []
+      selector:
+        action:
+
+trigger:
+- domain: mqtt
+  device_id: !input rodret_device
+  type: action
+  subtype: "on"
+  trigger: device
+  id: on_button
+  
+- domain: mqtt
+  device_id: !input rodret_device
+  type: action
+  subtype: "off"
+  trigger: device
+  id: off_button
+  
+- domain: mqtt
+  device_id: !input rodret_device
+  type: action
+  subtype: "brightness_move_up"
+  trigger: device
+  id: brightness_move_up
+  
+- domain: mqtt
+  device_id: !input rodret_device
+  type: action
+  subtype: "brightness_move_down"
+  trigger: device
+  id: brightness_move_down
+
+- domain: mqtt
+  device_id: !input rodret_device
+  type: action
+  subtype: "brightness_stop"
+  trigger: device
+  id: brightness_stop
+
+
+action:
+- choose:
+  - alias: "On Button (single)"
+    conditions:
+    - condition: trigger
+      id:
+      - on_button
+    sequence:
+    - choose: []
+      default: !input on_button
+
+  - alias: "Off Button (single)"
+    conditions:
+    - condition: trigger
+      id:
+      - off_button
+    sequence:
+    - choose: []
+      default: !input off_button
+
+  - alias: "Brightness Up (hold)"
+    conditions:
+    - condition: trigger
+      id:
+      - brightness_move_up
+    sequence:
+    - choose: []
+      default: !input bright_up_hold
+
+  - alias: "Brightness Down (hold)"
+    conditions:
+    - condition: trigger
+      id:
+      - brightness_move_down
+    sequence:
+    - choose: []
+      default: !input bright_down_hold
+
+  - alias: "Brightness Up (hold)"
+    conditions:
+    - condition: trigger
+      id:
+      - brightness_stop
+    sequence:
+    - choose: []
+      default: !input bright_stop
