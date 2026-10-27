@@ -17,6 +17,61 @@ blueprint:
           integration: binary_sensor
           device_class: motion
 
+    scene_day:
+      name: Day Scene
+      description: The scene to trigger when motion is detected within the Day Time window
+      selector:
+        select:
+          options:
+          - selector:
+              entity:
+                integration: light
+                device_class: scene
+          - const: none
+
+    scene_night:
+      name: Night Scene
+      description: The scene to trigger when motion is detected outside the Day Time window
+      selector:
+        select:
+          options:
+          - selector:
+              entity:
+                integration: light
+                device_class: scene
+          - const: none
+
+    scene_off:
+      name: Off Scene
+      description: The scene to trigger when motion is no longer detected after the timeout
+      selector:
+        select:
+          options:
+          - selector:
+              entity:
+                integration: light
+                device_class: scene
+          - const: none
+
+    motion_day_start:
+      name: Day Scene Start
+      description: Time of day from which the Day Scene is triggered (day window start)
+      selector:
+        time:
+
+    motion_day_end:
+      name: Day Scene End
+      description: Time of day until which the Day Scene is triggered (day window end)
+      selector:
+        time:
+
+    motion_timeout:
+      name: Motion Timeout
+      description: Time after which the Off Scene should be triggered when motion is no longer detected
+      default: 00:10:00
+      selector:
+        duration:
+
   input:
     scene_day:
       name: Day Scene
