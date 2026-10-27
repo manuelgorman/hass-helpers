@@ -1,0 +1,134 @@
+blueprint:
+  author: Manuel Gorman
+  name: Motion Scene Activator (Time-Based)
+  description: >-
+    An automation to trigger one of two scenes when motion is detected,
+    depending on whether the time of day falls within the configured Day
+    window, and a third "off" scene once motion is no longer detected for
+    a given timeout.
+  domain: automation
+
+  input:
+    motion_entity:
+      name: Motion Entity
+      description: The motion sensor entity that triggers the scenes
+      selector:
+        entity:
+          integration: binary_sensor
+          device_class: motion
+
+  input:
+    scene_day:
+      name: Day Scene
+      description: The scene to trigger when motion is detected within the Day Time window
+      selector:
+        select:
+          options:
+          - selector:
+              entity:
+                integration: light
+                device_class: scene
+          - const: none
+
+  input:
+    scene_night:
+      name: Night Scene
+      description: The scene to trigger when motion is detected outside the Day Time window
+      selector:
+        select:
+          options:
+          - selector:
+              entity:
+                integration: light
+                device_class: scene
+          - const: none
+
+  input:
+    scene_off:
+      name: Off Scene
+      description: The scene to trigger when motion is no longer detected after the timeout
+      selector:
+        select:
+          options:
+          - selector:
+              entity:
+                integration: light
+                device_class: scene
+          - const: none
+
+  input:
+    motion_day_start:
+      name: Day Scene Start
+      description: Time of day from which the Day Scene is triggered (day window start)
+      selector:
+        time:
+
+  input:
+    motion_day_end:
+      name: Day Scene End
+      description: Time of day until which the Day Scene is triggered (day window end)
+      selector:
+        time:
+
+  input:
+    motion_timeout:
+      name: Motion Timeout
+      description: Time after which the Off Scene should be triggered when motion is no longer detected
+      default: 00:10:00
+      selector:
+        duration:
+
+trigger:
+- platform: state
+  entity_id: !input motion_entity
+  to: "triggered"
+  id: motion_detected
+
+- platform: state
+  entity_id: !input motion_entity
+  to: "not_triggered"
+  id: motion_cleared
+
+action:
+- when:
+  - condition: trigger
+    id:
+    - motion_detected
+  sequence:
+  - choose:
+    - alias: Day scene
+      conditions:
+      - condition: or
+        conditions:
+        # Window within the same day (start <= end)
+        - condition: and
+          conditions:
+          - condition: template
+            value_template: "{{ now().hour * 60 + now().minute >= motion_day_start.hour * 60 + motion_day_start.minute }}"
+          - condition: template
+            value_template: "{{ now().hour * 60 + now().minute <= motion_day_end.hour * 60 + motion_day_end.minute }}"
+        # Window crossing midnight (start > end, e.g. 23:00 -> 07:00)
+        - condition: and
+          conditions:
+          - condition: template
+            value_template: "{{ motion_day_start.hour * 60 + motion_day_start.minute > motion_day_end.hour * 60 + motion_day_end.minute }}"
+          - condition: or
+            conditions:
+            - condition: template
+              value_template: "{{ now().hour * 60 + now().minute >= motion_day_start.hour * 60 + motion_day_start.minute }}"
+            - condition: template
+              value_template: "{{ now().hour * 60 + now().minute <= motion_day_end.hour * 60 + motion_day_end.minute }}"
+      sequence:
+      - scene: !input scene_day
+
+    - alias: Night scene
+      sequence:
+      - scene: !input scene_night
+
+- when:
+  - condition: trigger
+    id:
+    - motion_cleared
+  sequence:
+  - delay: !input motion_timeout
+  - scene: !input scene_off
