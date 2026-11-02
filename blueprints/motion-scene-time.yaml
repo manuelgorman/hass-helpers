@@ -66,47 +66,49 @@ trigger:
   entity_id: !input motion_entity
   to: "not_triggered"
   id: motion_cleared
+  for: !input motion_timeout
 
 action:
-- when:
-  - condition: trigger
-    id:
-    - motion_detected
-  sequence:
-  - choose:
-    - alias: Day scene
-      conditions:
-      - condition: or
+- choose:
+  - alias: Motion Triggered
+    conditions:
+    - condition: trigger
+      id:
+      - motion_detected
+    sequence:
+    - choose:
+      - alias: Day scene
         conditions:
-        # Window within the same day (start <= end)
-        - condition: and
+        - condition: or
           conditions:
-          - condition: template
-            value_template: "{{ now().hour * 60 + now().minute >= motion_day_start.hour * 60 + motion_day_start.minute }}"
-          - condition: template
-            value_template: "{{ now().hour * 60 + now().minute <= motion_day_end.hour * 60 + motion_day_end.minute }}"
-        # Window crossing midnight (start > end, e.g. 23:00 -> 07:00)
-        - condition: and
-          conditions:
-          - condition: template
-            value_template: "{{ motion_day_start.hour * 60 + motion_day_start.minute > motion_day_end.hour * 60 + motion_day_end.minute }}"
-          - condition: or
+          # Window within the same day (start <= end)
+          - condition: and
             conditions:
             - condition: template
               value_template: "{{ now().hour * 60 + now().minute >= motion_day_start.hour * 60 + motion_day_start.minute }}"
             - condition: template
               value_template: "{{ now().hour * 60 + now().minute <= motion_day_end.hour * 60 + motion_day_end.minute }}"
-      sequence:
-      - scene: !input scene_day
+          # Window crossing midnight (start > end, e.g. 23:00 -> 07:00)
+          - condition: and
+            conditions:
+            - condition: template
+              value_template: "{{ motion_day_start.hour * 60 + motion_day_start.minute > motion_day_end.hour * 60 + motion_day_end.minute }}"
+            - condition: or
+              conditions:
+              - condition: template
+                value_template: "{{ now().hour * 60 + now().minute >= motion_day_start.hour * 60 + motion_day_start.minute }}"
+              - condition: template
+                value_template: "{{ now().hour * 60 + now().minute <= motion_day_end.hour * 60 + motion_day_end.minute }}"
+        sequence:
+        - scene: !input scene_day
+      - alias: Night scene
+        sequence:
+        - scene: !input scene_night
 
-    - alias: Night scene
-      sequence:
-      - scene: !input scene_night
-
-- when:
-  - condition: trigger
-    id:
-    - motion_cleared
-  sequence:
-  - delay: !input motion_timeout
-  - scene: !input scene_off
+  - alias: Motion Cleared
+    conditions:
+    - condition: trigger
+      id:
+      - motion_cleared
+    sequence:
+    - scene: !input scene_off
