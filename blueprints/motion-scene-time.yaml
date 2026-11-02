@@ -54,12 +54,12 @@ blueprint:
 trigger:
 - platform: state
   entity_id: !input motion_entity
-  to: "triggered"
+  to: "on"
   id: motion_detected
 
 - platform: state
   entity_id: !input motion_entity
-  to: "not_triggered"
+  to: "off"
   id: motion_cleared
   for: !input motion_timeout
 
