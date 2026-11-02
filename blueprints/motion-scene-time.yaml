@@ -14,44 +14,28 @@ blueprint:
       description: The motion sensor entity that triggers the scenes
       selector:
         entity:
-          integration: binary_sensor
           device_class: motion
 
     scene_day:
       name: Day Scene
       description: The scene to trigger when motion is detected within the Day Time window
       selector:
-        select:
-          options:
-          - selector:
-              entity:
-                integration: light
-                device_class: scene
-          - const: none
+        entity:
+          domain: scene
 
     scene_night:
       name: Night Scene
       description: The scene to trigger when motion is detected outside the Day Time window
       selector:
-        select:
-          options:
-          - selector:
-              entity:
-                integration: light
-                device_class: scene
-          - const: none
+        entity:
+          domain: scene
 
     scene_off:
       name: Off Scene
       description: The scene to trigger when motion is no longer detected after the timeout
       selector:
-        select:
-          options:
-          - selector:
-              entity:
-                integration: light
-                device_class: scene
-          - const: none
+        entity:
+          domain: scene
 
     motion_day_start:
       name: Day Scene Start
