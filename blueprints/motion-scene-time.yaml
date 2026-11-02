@@ -81,14 +81,12 @@ action:
         conditions:
         - condition: or
           conditions:
-          # Window within the same day (start <= end)
           - condition: and
             conditions:
             - condition: template
               value_template: "{{ now().hour * 60 + now().minute >= motion_day_start.hour * 60 + motion_day_start.minute }}"
             - condition: template
               value_template: "{{ now().hour * 60 + now().minute <= motion_day_end.hour * 60 + motion_day_end.minute }}"
-          # Window crossing midnight (start > end, e.g. 23:00 -> 07:00)
           - condition: and
             conditions:
             - condition: template
