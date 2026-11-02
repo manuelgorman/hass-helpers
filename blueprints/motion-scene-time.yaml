@@ -37,17 +37,12 @@ blueprint:
         entity:
           domain: scene
 
-    motion_day_start:
-      name: Day Scene Start
-      description: Time of day from which the Day Scene is triggered (day window start)
+    day_mode_sensor:
+      name: Day Mode Binary Sensor
+      description: Should be a Binary Sensor representing whether Day or Night mode is required (Day = On)
       selector:
-        time:
-
-    motion_day_end:
-      name: Day Scene End
-      description: Time of day until which the Day Scene is triggered (day window end)
-      selector:
-        time:
+        entity:
+          domain: binary_sensor
 
     motion_timeout:
       name: Motion Timeout
@@ -68,7 +63,7 @@ trigger:
   id: motion_cleared
   for: !input motion_timeout
 
-action:
+actions:
 - choose:
   - alias: Motion Triggered
     conditions:
@@ -79,24 +74,9 @@ action:
     - choose:
       - alias: Day scene
         conditions:
-        - condition: or
-          conditions:
-          - condition: and
-            conditions:
-            - condition: template
-              value_template: "{{ now().hour * 60 + now().minute >= motion_day_start.hour * 60 + motion_day_start.minute }}"
-            - condition: template
-              value_template: "{{ now().hour * 60 + now().minute <= motion_day_end.hour * 60 + motion_day_end.minute }}"
-          - condition: and
-            conditions:
-            - condition: template
-              value_template: "{{ motion_day_start.hour * 60 + motion_day_start.minute > motion_day_end.hour * 60 + motion_day_end.minute }}"
-            - condition: or
-              conditions:
-              - condition: template
-                value_template: "{{ now().hour * 60 + now().minute >= motion_day_start.hour * 60 + motion_day_start.minute }}"
-              - condition: template
-                value_template: "{{ now().hour * 60 + now().minute <= motion_day_end.hour * 60 + motion_day_end.minute }}"
+        - condition: state
+          entity_id: !input day_mode_sensor
+          state: "on"
         sequence:
         - scene: !input scene_day
       - alias: Night scene
