@@ -1,0 +1,96 @@
+blueprint:
+  author: Manuel Gorman
+  name: Motion Scene Activator (Time-Based)
+  description: >-
+    An automation to trigger one of two scenes when motion is detected,
+    depending on whether the time of day falls within the configured Day
+    window, and a third "off" scene once motion is no longer detected for
+    a given timeout.
+  domain: automation
+
+  input:
+    motion_entity:
+      name: Motion Entity
+      description: The motion sensor entity that triggers the scenes
+      selector:
+        entity:
+          device_class: motion
+
+    scene_day:
+      name: Day Scene
+      description: The scene to trigger when motion is detected within the Day Time window
+      selector:
+        entity:
+          domain: scene
+
+    scene_night:
+      name: Night Scene
+      description: The scene to trigger when motion is detected outside the Day Time window
+      selector:
+        entity:
+          domain: scene
+
+    scene_off:
+      name: Off Scene
+      description: The scene to trigger when motion is no longer detected after the timeout
+      selector:
+        entity:
+          domain: scene
+
+    day_mode_sensor:
+      name: Day Mode Binary Sensor
+      description: Should be a Binary Sensor representing whether Day or Night mode is required (Day = On)
+      selector:
+        entity:
+          domain: binary_sensor
+
+    motion_timeout:
+      name: Motion Timeout
+      description: Time after which the Off Scene should be triggered when motion is no longer detected
+      default: 00:10:00
+      selector:
+        duration:
+
+trigger:
+- platform: state
+  entity_id: !input motion_entity
+  to: "on"
+  id: motion_detected
+
+- platform: state
+  entity_id: !input motion_entity
+  to: "off"
+  id: motion_cleared
+  for: !input motion_timeout
+
+actions:
+- choose:
+  - alias: Motion Triggered
+    conditions:
+    - condition: trigger
+      id:
+      - motion_detected
+    sequence:
+    - choose:
+      - alias: Day Scene
+        conditions:
+        - condition: state
+          entity_id: !input day_mode_sensor
+          state: "on"
+        sequence:
+        - scene: !input scene_day
+      - alias: Night Scene
+        conditions:
+        - condition: state
+          entity_id: !input day_mode_sensor
+          state: "off"
+        sequence:
+        - scene: !input scene_night
+
+  - alias: Motion Cleared
+    conditions:
+    - condition: trigger
+      id:
+      - motion_cleared
+    sequence:
+    - scene: !input scene_off
