@@ -72,14 +72,18 @@ actions:
       - motion_detected
     sequence:
     - choose:
-      - alias: Day scene
+      - alias: Day Scene
         conditions:
         - condition: state
           entity_id: !input day_mode_sensor
           state: "on"
         sequence:
         - scene: !input scene_day
-      - alias: Night scene
+      - alias: Night Scene
+        conditions:
+        - condition: state
+          entity_id: !input day_mode_sensor
+          state: "off"
         sequence:
         - scene: !input scene_night
 
